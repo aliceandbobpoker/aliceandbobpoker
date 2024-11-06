@@ -1441,6 +1441,7 @@ module aliceandbobpoker::game {
 
         let found_next = find_next_bet_player_this_round(game, curr_idx, is_start);
         if (!found_next) {
+            // if unable to find another player to bet, move to next round
             let current_round = game.bet_round;
             new_betting_round(game, (current_round + 1));
             if (current_round == NUM_ROUNDS - 1) {
@@ -1603,8 +1604,8 @@ module aliceandbobpoker::game {
                 assert!(bet_type == BET_CALL, 0);
                 assert!((total_bet_value == game.current_bet) || (player_is_all_in && (total_bet_value < game.current_bet)), 0);
             };
+            find_next_bet_player(game, idx, false, ctx);
         };
-        find_next_bet_player(game, idx, false, ctx);
         object::delete(id);
         event::emit(AddBetEvent {
             game_id: object::uid_to_inner(&game.id),
